@@ -38,12 +38,18 @@ def get_customer():
     return make_response(jsonify(data), 200)
 
 #select function for account details
-@app.route("/account_details", methods=["GET"])
+@app.route("/accounts", methods=["GET"])
 def get_account():
     query = "SELECT * FROM account_details"
     data = data_fetch(query)
     return make_response(jsonify(data), 200)
 
+#select specific network based on id
+@app.route("/network_infrastructure/<int:id>", methods=["GET"])
+def get_actor_by_id(id):
+    data = data_fetch("""select * from network_infrastructure
+where network_id = {}""".format(id))
+    return make_response(jsonify(data), 200)
 
 if __name__ == "__main__":
     app.run(debug=True)
