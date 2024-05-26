@@ -24,7 +24,7 @@ def data_fetch(query):
 
 #get/select functions for the tables
 #select function for network infrastructure
-@app.route("/network_infrastructure", methods=["GET"])
+@app.route("/networks", methods=["GET"])
 def get_net():
     query = "SELECT * FROM network_infrastructure"
     data = data_fetch(query)
@@ -45,7 +45,7 @@ def get_account():
     return make_response(jsonify(data), 200)
 
 #select specific network based on id
-@app.route("/network_infrastructure/<int:id>", methods=["GET"])
+@app.route("/networks/<int:id>", methods=["GET"])
 def get_network_by_id(id):
     data = data_fetch("""select * from network_infrastructure
 where network_id = {}""".format(id))
@@ -89,6 +89,54 @@ def add_customer():
     return make_response(
         jsonify(
             {"message": "customer added successfully", "rows_affected": rows_affected}
+        ),
+        201,
+    )
+
+@app.route("/networks", methods=["POST"])
+def add_network():
+    cur = mysql.connection.cursor()
+    info = request.get_json()
+    network_id = info["network_id"]
+    grid_location = info["grid_location"]
+    grid_name = info["grid_name"]
+
+    
+    cur.execute(
+        """ INSERT INTO network_infrastructure (network_id, grid_location, grid_name) VALUE (%s, %s, %s)""",
+        (network_id, grid_location, grid_name),
+    )
+    mysql.connection.commit()
+    print("row(s) affected :{}".format(cur.rowcount))
+    rows_affected = cur.rowcount
+    cur.close()
+    return make_response(
+        jsonify(
+            {"message": "network added successfully", "rows_affected": rows_affected}
+        ),
+        201,
+    )
+
+@app.route("/accounts", methods=["POST"])
+def add_account():
+    cur = mysql.connection.cursor()
+    info = request.get_json()
+    account_id = info["account_id"]
+    service_type = info["service_type"]
+    customer_id_fk = info["customer_id_fk"]
+
+    
+    cur.execute(
+        """ INSERT INTO account_details (account_id,customer_id_fk, service_type) VALUE (%s, %s, %s)""",
+        (account_id, customer_id_fk,service_type),
+    )
+    mysql.connection.commit()
+    print("row(s) affected :{}".format(cur.rowcount))
+    rows_affected = cur.rowcount
+    cur.close()
+    return make_response(
+        jsonify(
+            {"message": "account added successfully", "rows_affected": rows_affected}
         ),
         201,
     )
