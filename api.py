@@ -161,6 +161,45 @@ def update_customer(id):
         200,
     )
 
+@app.route("/networks/<int:id>", methods=["PUT"])
+def update_network(id):
+    cur = mysql.connection.cursor()
+    info = request.get_json()
+    grid_location = info["grid_location"]
+    grid_name = info["grid_name"]
+    cur.execute(
+        """ UPDATE network_infrastructure SET grid_location = %s, grid_name = %s WHERE network_id = %s """,
+        (grid_location, grid_name, id),
+    )
+    mysql.connection.commit()
+    rows_affected = cur.rowcount
+    cur.close()
+    return make_response(
+        jsonify(
+            {"message": "network updated successfully", "rows_affected": rows_affected}
+        ),
+        200,
+    )
+
+@app.route("/accounts/<int:id>", methods=["PUT"])
+def update_account(id):
+    cur = mysql.connection.cursor()
+    info = request.get_json()
+    service_type = info["service_type"]
+    cur.execute(
+        """ UPDATE account_details SET service_type = %s WHERE account_id = %s """,
+        (service_type, id),
+    )
+    mysql.connection.commit()
+    rows_affected = cur.rowcount
+    cur.close()
+    return make_response(
+        jsonify(
+            {"message": "account updated successfully", "rows_affected": rows_affected}
+        ),
+        200,
+    )
+
 
 if __name__ == "__main__":
     app.run(debug=True)
