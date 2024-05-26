@@ -46,10 +46,25 @@ def get_account():
 
 #select specific network based on id
 @app.route("/network_infrastructure/<int:id>", methods=["GET"])
-def get_actor_by_id(id):
+def get_network_by_id(id):
     data = data_fetch("""select * from network_infrastructure
 where network_id = {}""".format(id))
     return make_response(jsonify(data), 200)
+
+#select specific customer based on id
+@app.route("/customers/<int:id>", methods=["GET"])
+def get_customer_by_id(id):
+    data = data_fetch("""select * from customer
+where customer_id = {}""".format(id))
+    return make_response(jsonify(data), 200)
+
+#select specific account based on id
+@app.route("/accounts/<int:id>", methods=["GET"])
+def get_account_by_id(id):
+    data = data_fetch("""select * from account_details
+where account_id = {}""".format(id))
+    return make_response(jsonify(data), 200)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
