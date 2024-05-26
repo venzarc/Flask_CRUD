@@ -214,6 +214,24 @@ def delete_customer(id):
         200,
     )
 
+@app.route("/networks/format", methods=["GET"])
+def get_params_net():
+    fmt = request.args.get('id')
+    foo = request.args.get('aaaa')
+    return make_response(jsonify({"format":fmt, "foo":foo}),200)
+
+@app.route("/customers/format", methods=["GET"])
+def get_params_customers():
+    fmt = request.args.get('id')
+    foo = request.args.get('aaaa')
+    return make_response(jsonify({"format":fmt, "foo":foo}),200)
+
+@app.route("/accounts/format", methods=["GET"])
+def get_params_account():
+    fmt = request.args.get('id')
+    foo = request.args.get('aaaa')
+    return make_response(jsonify({"format":fmt, "foo":foo}),200)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
