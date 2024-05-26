@@ -10,6 +10,7 @@ app.config["MYSQL_CURSORCLASS"] = "DictCursor"
 
 mysql = MySQL(app)
 
+#home page
 @app.route("/")
 def hello_world():
     return "<p>Hello, World!</p>"
@@ -65,6 +66,7 @@ def get_account_by_id(id):
 where account_id = {}""".format(id))
     return make_response(jsonify(data), 200)
 
+#adding new customer
 @app.route("/customers", methods=["POST"])
 def add_customer():
     cur = mysql.connection.cursor()
@@ -93,6 +95,7 @@ def add_customer():
         201,
     )
 
+#adding new network
 @app.route("/networks", methods=["POST"])
 def add_network():
     cur = mysql.connection.cursor()
@@ -116,6 +119,7 @@ def add_network():
         201,
     )
 
+#adding new account
 @app.route("/accounts", methods=["POST"])
 def add_account():
     cur = mysql.connection.cursor()
@@ -140,6 +144,7 @@ def add_account():
         201,
     )
 
+#update customer
 @app.route("/customers/<int:id>", methods=["PUT"])
 def update_customer(id):
     cur = mysql.connection.cursor()
@@ -160,6 +165,7 @@ def update_customer(id):
         200,
     )
 
+#update networks
 @app.route("/networks/<int:id>", methods=["PUT"])
 def update_network(id):
     cur = mysql.connection.cursor()
@@ -180,6 +186,7 @@ def update_network(id):
         200,
     )
 
+#update accounts
 @app.route("/accounts/<int:id>", methods=["PUT"])
 def update_account(id):
     cur = mysql.connection.cursor()
@@ -199,9 +206,9 @@ def update_account(id):
         200,
     )
 
-
+#delete network
 @app.route("/networks/<int:id>", methods=["DELETE"])
-def delete_customer(id):
+def delete_network(id):
     cur = mysql.connection.cursor()
     cur.execute(""" DELETE FROM network_infrastructure where network_id = %s """, (id,))
     mysql.connection.commit()
@@ -214,18 +221,21 @@ def delete_customer(id):
         200,
     )
 
+#uri parameter for networks
 @app.route("/networks/format", methods=["GET"])
 def get_params_net():
     fmt = request.args.get('id')
     foo = request.args.get('aaaa')
     return make_response(jsonify({"format":fmt, "foo":foo}),200)
 
+#uri parameter for customers
 @app.route("/customers/format", methods=["GET"])
 def get_params_customers():
     fmt = request.args.get('id')
     foo = request.args.get('aaaa')
     return make_response(jsonify({"format":fmt, "foo":foo}),200)
 
+#uri parameter for accounts
 @app.route("/accounts/format", methods=["GET"])
 def get_params_account():
     fmt = request.args.get('id')
