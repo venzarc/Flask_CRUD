@@ -14,5 +14,13 @@ mysql = MySQL(app)
 def hello_world():
     return "<p>Hello, World!</p>"
 
+#to fetch data from the mysql server
+def data_fetch(query):
+    cur = mysql.connection.cursor()
+    cur.execute(query)
+    data = cur.fetchall()
+    cur.close()
+    return data
+
 if __name__ == "__main__":
     app.run(debug=True)
