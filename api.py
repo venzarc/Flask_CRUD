@@ -66,6 +66,33 @@ def get_account_by_id(id):
 where account_id = {}""".format(id))
     return make_response(jsonify(data), 200)
 
+#Select inner join customer and networks
+#to show what reclosers are the selected customers in
+@app.route("/customers/<int:id>/networks", methods=["GET"])
+def get_customers_by_networks(id):
+    data = data_fetch(
+        """
+    SELECT 
+    c.first_name,
+    c.last_name,
+    n.grid_name
+FROM 
+    CUSTOMER c
+INNER JOIN 
+    NETWORK_INFRASTRUCTURE n
+ON 
+    c.network_id_fk = n.network_id
+    WHERE n.network_id = {};
+    """.format(
+            id
+        )
+    )
+    return make_response(
+        jsonify({"network_id": id, "count": len(data), "network_infrastructure": data}), 200
+    )
+
+
+#create/post functions for the tables
 #adding new customer
 @app.route("/customers", methods=["POST"])
 def add_customer():
@@ -144,6 +171,7 @@ def add_account():
         201,
     )
 
+#edit/put functions for the tables
 #update customer
 @app.route("/customers/<int:id>", methods=["PUT"])
 def update_customer(id):
