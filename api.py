@@ -22,5 +22,14 @@ def data_fetch(query):
     cur.close()
     return data
 
+#get/select functions for the tables
+#select function for network infrastructure
+@app.route("/network_infrastructure", methods=["GET"])
+def get_net():
+    query = "SELECT * FROM network_infrastructure"
+    data = data_fetch(query)
+    return make_response(jsonify(data), 200)
+
+
 if __name__ == "__main__":
     app.run(debug=True)
