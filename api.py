@@ -141,6 +141,26 @@ def add_account():
         201,
     )
 
+@app.route("/customers/<int:id>", methods=["PUT"])
+def update_customer(id):
+    cur = mysql.connection.cursor()
+    info = request.get_json()
+    first_name = info["first_name"]
+    last_name = info["last_name"]
+    cur.execute(
+        """ UPDATE customer SET first_name = %s, last_name = %s WHERE customer_id = %s """,
+        (first_name, last_name, id),
+    )
+    mysql.connection.commit()
+    rows_affected = cur.rowcount
+    cur.close()
+    return make_response(
+        jsonify(
+            {"message": "customer updated successfully", "rows_affected": rows_affected}
+        ),
+        200,
+    )
+
 
 if __name__ == "__main__":
     app.run(debug=True)
