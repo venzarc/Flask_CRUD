@@ -65,6 +65,34 @@ def get_account_by_id(id):
 where account_id = {}""".format(id))
     return make_response(jsonify(data), 200)
 
+@app.route("/customers", methods=["POST"])
+def add_customer():
+    cur = mysql.connection.cursor()
+    info = request.get_json()
+    customer_id = info["customer_id"]
+    first_name = info["first_name"]
+    last_name = info["last_name"]
+    contact_number = info["contact_number"]
+    network_id_fk = info ["network_id_fk"]
+    customer_address = info["customer_address"]
+    
+    cur.execute(
+        """ INSERT INTO customer (contact_number, customer_address, customer_id, 
+         first_name, last_name, network_id_fk ) VALUE (%s, %s, %s, %s, %s, %s)""",
+        (contact_number, customer_address, customer_id, 
+         first_name, last_name, network_id_fk ),
+    )
+    mysql.connection.commit()
+    print("row(s) affected :{}".format(cur.rowcount))
+    rows_affected = cur.rowcount
+    cur.close()
+    return make_response(
+        jsonify(
+            {"message": "customer added successfully", "rows_affected": rows_affected}
+        ),
+        201,
+    )
+
 
 if __name__ == "__main__":
     app.run(debug=True)
