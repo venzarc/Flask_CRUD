@@ -101,7 +101,6 @@ def add_network():
     grid_location = info["grid_location"]
     grid_name = info["grid_name"]
 
-    
     cur.execute(
         """ INSERT INTO network_infrastructure (network_id, grid_location, grid_name) VALUE (%s, %s, %s)""",
         (network_id, grid_location, grid_name),
@@ -196,6 +195,21 @@ def update_account(id):
     return make_response(
         jsonify(
             {"message": "account updated successfully", "rows_affected": rows_affected}
+        ),
+        200,
+    )
+
+
+@app.route("/networks/<int:id>", methods=["DELETE"])
+def delete_customer(id):
+    cur = mysql.connection.cursor()
+    cur.execute(""" DELETE FROM network_infrastructure where network_id = %s """, (id,))
+    mysql.connection.commit()
+    rows_affected = cur.rowcount
+    cur.close()
+    return make_response(
+        jsonify(
+            {"message": "network deleted successfully", "rows_affected": rows_affected}
         ),
         200,
     )
